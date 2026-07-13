@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Prediction History | FraudShield AI</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+
+body{
+background:#eef3fb;
+font-family:'Segoe UI',sans-serif;
+}
+
+.sidebar{
+position:fixed;
+left:0;
+top:0;
+width:250px;
+height:100vh;
+background:#0f172a;
+padding-top:30px;
+}
+
+.sidebar h3{
+color:white;
+text-align:center;
+margin-bottom:35px;
+font-weight:700;
+}
+
+.sidebar a{
+display:block;
+padding:15px 25px;
+text-decoration:none;
+color:#cbd5e1;
+transition:.3s;
+font-size:17px;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+color:white;
+padding-left:35px;
+}
+
+.main{
+margin-left:250px;
+padding:40px;
+}
+
+.summary-card{
+border:none;
+border-radius:18px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.table-card{
+border:none;
+border-radius:18px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+overflow:hidden;
+}
+
+.table td,
+.table th{
+vertical-align:middle;
+}
+
+.badge{
+padding:8px 14px;
+font-size:14px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h3>
+
+🛡 FraudShield
+
+</h3>
+
+<a href="/dashboard">
+
+<i class="bi bi-speedometer2"></i>
+
+Dashboard
+
+</a>
+
+<a href="/detect">
+
+<i class="bi bi-search"></i>
+
+Detect Fraud
+
+</a>
+
+<a href="/history">
+
+<i class="bi bi-clock-history"></i>
+
+History
+
+</a>
+
+<a href="/">
+
+<i class="bi bi-house"></i>
+
+Home
+
+</a>
+
+<a href="/logout">
+
+<i class="bi bi-box-arrow-right"></i>
+
+Logout
+
+</a>
+
+</div>
+
+<div class="main">
+
+<h2 class="mb-4">
+
+📜 Prediction History
+
+</h2>
+
+<div class="row mb-4">
+
+<div class="col-md-4">
+
+<div class="card summary-card">
+
+<div class="card-body">
+
+<h6>Total Predictions</h6>
+
+<h2>{{ transactions|length }}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card summary-card">
+
+<div class="card-body">
+
+<h6>AI Model</h6>
+
+<h2>Random Forest</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card summary-card">
+
+<div class="card-body">
+
+<h6>Status</h6>
+
+<h2 class="text-success">
+
+Online
+
+</h2>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card table-card">
+
+<div class="card-header bg-primary text-white">
+
+<h4>
+
+Transaction Records
+
+</h4>
+
+</div>
+
+<div class="card-body">
+
+{% if transactions %}
+
+<div class="table-responsive">
+
+<table class="table table-hover">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>ID</th>
+
+<th>Amount</th>
+
+<th>Hour</th>
+
+<th>Location</th>
+
+<th>Prediction</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for t in transactions %}
+
+<tr>
+
+<td>
+
+{{ t.id }}
+
+</td>
+
+<td>
+
+₹ {{ "%.2f"|format(t.amount) }}
+
+</td>
+
+<td>
+
+{{ t.time }}:00
+
+</td>
+
+<td>
+
+{% if t.location_risk==1 %}
+
+<span class="badge bg-warning text-dark">
+
+Risky
+
+</span>
+
+{% else %}
+
+<span class="badge bg-success">
+
+Safe
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if t.prediction=="Fraud Detected" %}
+
+<span class="badge bg-danger">
+
+Fraud Detected
+
+</span>
+
+{% else %}
+
+<span class="badge bg-success">
+
+Legitimate
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ t.created_at.strftime("%d-%m-%Y %I:%M %p") }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+
+No transaction history found.
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+<div class="mt-4">
+
+<a href="/detect" class="btn btn-primary">
+
+<i class="bi bi-search"></i>
+
+New Prediction
+
+</a>
+
+<a href="/dashboard" class="btn btn-dark">
+
+<i class="bi bi-arrow-left-circle"></i>
+
+Dashboard
+
+</a>
+
+<a href="/logout" class="btn btn-danger">
+
+<i class="bi bi-box-arrow-right"></i>
+
+Logout
+
+</a>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
